@@ -11,21 +11,6 @@ A [Node-RED](https://nodered.org/) node for executing SPARQL queries against SPA
 - Multiple output formats: simplified bindings, flat values, or full SPARQL JSON response
 - Dynamic query and endpoint injection via incoming messages
 
-## Installation
-
-### From npm
-
-```bash
-cd ~/.node-red
-npm install node-red-contrib-sparql
-```
-
-### Local development
-
-```bash
-cd ~/.node-red
-npm install /path/to/node-red-contrib-sparql
-```
 
 ## Nodes
 
