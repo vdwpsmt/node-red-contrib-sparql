@@ -1,6 +1,6 @@
 var helper = require("node-red-node-test-helper");
-var sparqlQueryNode = require("../sparql/sparql-query.js");
-var sparqlEndpointNode = require("../sparql/sparql-endpoint.js");
+var sparqlQueryNode = require("../nodes/sparql-query.js");
+var sparqlEndpointNode = require("../nodes/sparql-endpoint.js");
 
 helper.init(require.resolve("node-red"));
 
@@ -21,7 +21,7 @@ describe("sparql-query Node", function () {
     it("should report error when no query is provided", function (done) {
         var flow = [
             { id: "n1", type: "sparql-query", name: "test sparql", endpoint: "e1", wires: [["n2"]] },
-            { id: "e1", type: "sparql-endpoint", sources: "https://dbpedia.org/sparql", sourceType: "sparql" },
+            { id: "e1", type: "sparql-endpoint", endpoint: "https://dbpedia.org/sparql" },
             { id: "n2", type: "helper" },
         ];
         helper.load([sparqlQueryNode, sparqlEndpointNode], flow, function () {
@@ -36,7 +36,7 @@ describe("sparql-query Node", function () {
         this.timeout(30000);
         var flow = [
             { id: "n1", type: "sparql-query", name: "dbpedia", endpoint: "e1", wires: [["n2"]] },
-            { id: "e1", type: "sparql-endpoint", sources: "https://dbpedia.org/sparql", sourceType: "sparql" },
+            { id: "e1", type: "sparql-endpoint", endpoint: "https://dbpedia.org/sparql" },
             { id: "n2", type: "helper" },
         ];
         helper.load([sparqlQueryNode, sparqlEndpointNode], flow, function () {

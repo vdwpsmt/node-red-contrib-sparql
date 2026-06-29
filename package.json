@@ -1,24 +1,23 @@
 {
-  "name": "node-red-contrib-comunica-sparql",
+  "name": "node-red-contrib-sparql",
   "version": "0.1.0",
-  "description": "A Node-RED node for executing SPARQL queries using the Comunica query engine",
+  "description": "A Node-RED node for executing SPARQL queries against SPARQL endpoints using the W3C SPARQL 1.1 Protocol",
   "keywords": [
     "node-red",
     "sparql",
-    "comunica",
     "rdf",
     "linked-data",
     "semantic-web",
     "query"
   ],
   "license": "MIT",
-  "author": "",
+  "author": "vdwpsmt",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/vdwpsmt/node-red-contrib-sparql.git"
   },
   "dependencies": {
-    "@comunica/query-sparql": "^5.2.4"
+    "sparql-http-client": "^3.1.0"
   },
   "devDependencies": {
     "node-red": "^4.0.0",
@@ -30,13 +29,13 @@
     "test": "mocha \"test/**/*_spec.js\" --timeout 10000"
   },
   "node-red": {
-    "version": ">=2.0.0",
+    "version": ">=5.0.0",
     "nodes": {
-      "sparql-query": "sparql/sparql-query.js",
-      "sparql-endpoint": "sparql/sparql-endpoint.js"
+      "sparql-query": "nodes/sparql-query.js",
+      "sparql-endpoint": "nodes/sparql-endpoint.js"
     }
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }

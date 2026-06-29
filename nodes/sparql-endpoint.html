@@ -1,0 +1,71 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sparql-endpoint', {
+        category: 'config',
+        defaults: {
+            name: { value: "" },
+            endpoint: { value: "", required: true },
+            httpMethod: { value: "POST-direct" }
+        },
+        credentials: {
+            username: { type: "text" },
+            password: { type: "password" }
+        },
+        label: function () {
+            return this.name || this.endpoint || "SPARQL Endpoint";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sparql-endpoint">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-endpoint"><i class="fa fa-globe"></i> Endpoint</label>
+        <input type="text" id="node-config-input-endpoint" placeholder="https://example.org/sparql">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-httpMethod"><i class="fa fa-exchange"></i> HTTP Method</label>
+        <select id="node-config-input-httpMethod">
+            <option value="POST-direct">POST (direct)</option>
+            <option value="POST-form">POST (form-encoded)</option>
+            <option value="GET">GET</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-username"><i class="fa fa-user"></i> Username</label>
+        <input type="text" id="node-config-input-username" placeholder="Username">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-lock"></i> Password</label>
+        <input type="password" id="node-config-input-password" placeholder="Password">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sparql-endpoint">
+    <p>Configuration node for a SPARQL endpoint connection.</p>
+
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Endpoint</dt>
+        <dd>The SPARQL endpoint URL (e.g. <code>https://query.wikidata.org/sparql</code>).</dd>
+        <dt>HTTP Method</dt>
+        <dd>The HTTP method used to send SPARQL queries to the endpoint, as defined by the
+        <a href="https://www.w3.org/TR/sparql11-protocol/#query-operation" target="_blank">W3C SPARQL 1.1 Protocol</a>:
+            <ul>
+                <li><b>POST (direct)</b> &mdash; Sends the query in the request body with
+                <code>Content-Type: application/sparql-query</code>. This is the <b>recommended default</b>.
+                It has no URL-length limitation and is supported by virtually all SPARQL endpoints.</li>
+                <li><b>POST (form-encoded)</b> &mdash; Sends the query as a URL-encoded form parameter
+                (<code>query=...</code>) with <code>Content-Type: application/x-www-form-urlencoded</code>.
+                Some legacy endpoints may require this method.</li>
+                <li><b>GET</b> &mdash; Sends the query as a <code>?query=</code> URL parameter.
+                Simple but limited by maximum URL length (~2000 characters depending on server).</li>
+            </ul>
+        </dd>
+        <dt>Username / Password</dt>
+        <dd>Optional HTTP Basic Authentication credentials. These are stored encrypted in
+        Node-RED's credential store.</dd>
+    </dl>
+</script>

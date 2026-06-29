@@ -34,7 +34,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-query"><i class="fa fa-search"></i> Query</label>
-        <textarea id="node-input-query" rows="10" cols="60" placeholder="SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10" style="width:70%; font-family:monospace;"></textarea>
+        <textarea id="node-input-query" rows="10" cols="60" placeholder="SELECT ?S ?P ?O&#10;WHERE {&#10;    ?S ?P ?O&#10;}" style="width:70%; font-family:monospace;"></textarea>
     </div>
     <div class="form-row">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Timeout (s)</label>
@@ -44,13 +44,15 @@
         <label for="node-input-outputFormat"><i class="fa fa-file-text-o"></i> Output</label>
         <select id="node-input-outputFormat" style="width:70%;">
             <option value="json">JSON (simplified)</option>
+            <option value="flat">JSON (flat values)</option>
+            <option value="full">JSON (full response)</option>
         </select>
     </div>
 </script>
 
 <script type="text/html" data-help-name="sparql-query">
-    <p>Executes a SPARQL query against one or more RDF data sources using the
-    <a href="https://comunica.dev/" target="_blank">Comunica</a> query engine.</p>
+    <p>Executes a SPARQL query against a SPARQL endpoint using the
+    <a href="https://www.w3.org/TR/sparql11-protocol/" target="_blank">W3C SPARQL 1.1 Protocol</a>.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -58,16 +60,15 @@
         <dd>The SPARQL query to execute. Overrides the configured query.</dd>
         <dt class="optional">payload <span class="property-type">string</span></dt>
         <dd>Used as the SPARQL query if <code>msg.query</code> is not set.</dd>
-        <dt class="optional">sources <span class="property-type">array | string</span></dt>
-        <dd>Data sources to query. Overrides the configured endpoint sources.
-        Can be an array of URLs/source objects or a comma-separated string of URLs.</dd>
+        <dt class="optional">endpoint <span class="property-type">string</span></dt>
+        <dd>SPARQL endpoint URL. Overrides the configured endpoint.</dd>
     </dl>
 
     <h3>Outputs</h3>
     <dl class="message-properties">
-        <dt>payload <span class="property-type">array | boolean | object</span></dt>
-        <dd>The query results. For SELECT queries, an array of binding objects.
-        For CONSTRUCT/DESCRIBE, an array of quad objects. For ASK, a boolean.</dd>
+        <dt>payload <span class="property-type">array | boolean | string | object</span></dt>
+        <dd>The query results. For SELECT queries, an array of binding objects (SPARQL JSON format).
+        For CONSTRUCT/DESCRIBE, RDF serialization as text. For ASK, a boolean. For UPDATE, <code>{ success: true }</code>.</dd>
         <dt>queryType <span class="property-type">string</span></dt>
         <dd>The detected query type (SELECT, CONSTRUCT, DESCRIBE, ASK, UPDATE).</dd>
         <dt>sparqlQuery <span class="property-type">string</span></dt>
@@ -75,19 +76,36 @@
     </dl>
 
     <h3>Details</h3>
-    <p>This node uses the <a href="https://www.npmjs.com/package/@comunica/query-sparql" target="_blank">Comunica SPARQL</a>
-    engine to execute federated SPARQL queries over heterogeneous data sources including
-    SPARQL endpoints, RDF files, Triple Pattern Fragments, and more.</p>
+    <p>This node sends SPARQL queries to an endpoint using the standard
+    <a href="https://www.w3.org/TR/sparql11-protocol/" target="_blank">SPARQL 1.1 Protocol</a>.
+    The HTTP method (POST direct, POST form-encoded, or GET) can be configured in the endpoint node.</p>
 
     <p>The query can be supplied via the node configuration, <code>msg.query</code>,
     or <code>msg.payload</code> (checked in that order of priority).</p>
 
-    <p>Sources can be configured via the endpoint configuration node or overridden
-    at runtime via <code>msg.sources</code>.</p>
+    <h4>Query input priority</h4>
+    <ol>
+        <li><code>msg.query</code> &mdash; highest priority</li>
+        <li><code>msg.payload</code> &mdash; used if <code>msg.query</code> is not set</li>
+        <li>Node configuration &mdash; used if neither message property is set</li>
+    </ol>
+
+    <h4>Note on multi-line queries</h4>
+    <p>SPARQL uses <code>#</code> for line comments: everything after <code>#</code> until the end of
+    the line is ignored. When sending a query via <code>msg.payload</code> from an inject node,
+    be aware that the inject node may collapse multi-line text into a single line. If your query
+    contains <code>#</code> comments, the comment will consume the rest of the query.</p>
+    <p>To avoid this, either:</p>
+    <ul>
+        <li>Use the <b>query field</b> in the sparql-query node configuration (preserves newlines)</li>
+        <li>Use a <b>template node</b> to set <code>msg.query</code> (preserves newlines)</li>
+        <li>Avoid <code>#</code> comments when passing queries via <code>msg.payload</code> from an inject node</li>
+    </ul>
 
     <h3>References</h3>
     <ul>
-        <li><a href="https://comunica.dev/docs/query/" target="_blank">Comunica Documentation</a></li>
         <li><a href="https://www.w3.org/TR/sparql11-query/" target="_blank">SPARQL 1.1 Query Language</a></li>
+        <li><a href="https://www.w3.org/TR/sparql11-protocol/" target="_blank">SPARQL 1.1 Protocol</a></li>
+        <li><a href="https://www.w3.org/TR/sparql11-results-json/" target="_blank">SPARQL 1.1 Query Results JSON Format</a></li>
     </ul>
 </script>
