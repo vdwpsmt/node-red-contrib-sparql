@@ -1,0 +1,38 @@
+[
+    {
+        "id": "example-flow-1",
+        "label": "SPARQL Query - Basic SELECT",
+        "nodes": [
+            {
+                "id": "inject1",
+                "type": "inject",
+                "name": "Trigger query",
+                "props": [
+                    { "p": "query", "vt": "str" },
+                    { "p": "sources", "vt": "json" }
+                ],
+                "query": "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 10",
+                "sources": "[\"https://dbpedia.org/sparql\"]",
+                "x": 150,
+                "y": 100,
+                "wires": [["sparql1"]]
+            },
+            {
+                "id": "sparql1",
+                "type": "sparql-query",
+                "name": "DBpedia Query",
+                "x": 370,
+                "y": 100,
+                "wires": [["debug1"]]
+            },
+            {
+                "id": "debug1",
+                "type": "debug",
+                "name": "Results",
+                "x": 570,
+                "y": 100,
+                "wires": []
+            }
+        ]
+    }
+]

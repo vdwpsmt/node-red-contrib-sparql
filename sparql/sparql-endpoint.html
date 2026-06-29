@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sparql-endpoint', {
+        category: 'config',
+        defaults: {
+            name: { value: "" },
+            sources: { value: "", required: true },
+            sourceType: { value: "auto" }
+        },
+        label: function () {
+            return this.name || this.sources || "SPARQL Endpoint";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sparql-endpoint">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-sources"><i class="fa fa-globe"></i> Sources</label>
+        <input type="text" id="node-config-input-sources" placeholder="Comma-separated source URLs">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-sourceType"><i class="fa fa-cog"></i> Source Type</label>
+        <select id="node-config-input-sourceType">
+            <option value="auto">Auto-detect</option>
+            <option value="sparql">SPARQL Endpoint</option>
+            <option value="file">RDF File</option>
+            <option value="hypermedia">Hypermedia (TPF)</option>
+        </select>
+    </div>
+</script>

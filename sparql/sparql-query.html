@@ -1,0 +1,93 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sparql-query', {
+        category: 'network',
+        color: '#4DB6AC',
+        defaults: {
+            name: { value: "" },
+            endpoint: { value: "", type: "sparql-endpoint" },
+            query: { value: "" },
+            outputFormat: { value: "json" },
+            timeout: { value: "60" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "db.svg",
+        paletteLabel: "SPARQL query",
+        label: function () {
+            return this.name || "SPARQL query";
+        },
+        oneditprepare: function () {
+            var queryEditor = this.query;
+            $("#node-input-query").val(queryEditor);
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sparql-query">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endpoint"><i class="fa fa-globe"></i> Endpoint</label>
+        <input type="text" id="node-input-endpoint">
+    </div>
+    <div class="form-row">
+        <label for="node-input-query"><i class="fa fa-search"></i> Query</label>
+        <textarea id="node-input-query" rows="10" cols="60" placeholder="SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10" style="width:70%; font-family:monospace;"></textarea>
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Timeout (s)</label>
+        <input type="number" id="node-input-timeout" placeholder="60" style="width:80px;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-outputFormat"><i class="fa fa-file-text-o"></i> Output</label>
+        <select id="node-input-outputFormat" style="width:70%;">
+            <option value="json">JSON (simplified)</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sparql-query">
+    <p>Executes a SPARQL query against one or more RDF data sources using the
+    <a href="https://comunica.dev/" target="_blank">Comunica</a> query engine.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt class="optional">query <span class="property-type">string</span></dt>
+        <dd>The SPARQL query to execute. Overrides the configured query.</dd>
+        <dt class="optional">payload <span class="property-type">string</span></dt>
+        <dd>Used as the SPARQL query if <code>msg.query</code> is not set.</dd>
+        <dt class="optional">sources <span class="property-type">array | string</span></dt>
+        <dd>Data sources to query. Overrides the configured endpoint sources.
+        Can be an array of URLs/source objects or a comma-separated string of URLs.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">array | boolean | object</span></dt>
+        <dd>The query results. For SELECT queries, an array of binding objects.
+        For CONSTRUCT/DESCRIBE, an array of quad objects. For ASK, a boolean.</dd>
+        <dt>queryType <span class="property-type">string</span></dt>
+        <dd>The detected query type (SELECT, CONSTRUCT, DESCRIBE, ASK, UPDATE).</dd>
+        <dt>sparqlQuery <span class="property-type">string</span></dt>
+        <dd>The SPARQL query that was executed.</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node uses the <a href="https://www.npmjs.com/package/@comunica/query-sparql" target="_blank">Comunica SPARQL</a>
+    engine to execute federated SPARQL queries over heterogeneous data sources including
+    SPARQL endpoints, RDF files, Triple Pattern Fragments, and more.</p>
+
+    <p>The query can be supplied via the node configuration, <code>msg.query</code>,
+    or <code>msg.payload</code> (checked in that order of priority).</p>
+
+    <p>Sources can be configured via the endpoint configuration node or overridden
+    at runtime via <code>msg.sources</code>.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://comunica.dev/docs/query/" target="_blank">Comunica Documentation</a></li>
+        <li><a href="https://www.w3.org/TR/sparql11-query/" target="_blank">SPARQL 1.1 Query Language</a></li>
+    </ul>
+</script>
